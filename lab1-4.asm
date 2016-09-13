@@ -25,17 +25,18 @@ avrl1:  mov 	a, r0
 	clr	p0.0
 	clr	p0.1
 
-; Checking if average is > than Qmax
+; Checking if average is >= than Qmax
 	mov	a, #0h
 	movc	a, @a+dptr
 	subb	a, r1
+	jz	qmax
 	jnc	tmin
 
-	setb	p0.0
+qmax:	setb	p0.0
 	setb	p0.1;
 	jmp	quit
 
-; Checkng if average is > than Qmin
+; Checking if average is > than Qmin
 tmin:	mov	a, #01h
 	movc	a, @a+dptr
 	subb	a, r1
@@ -44,7 +45,6 @@ tmin:	mov	a, #01h
 
 quit:	jmp $
 
-org 1000h
-	array: db 7,5,1,2,3,4,5,6,7,8,9,10 ; max, min, data array -> size 10
-
+org 800h
+	array: db 6,4,1,2,3,4,5,6,7,8,9,10 ; max, min, data array -> size 10
 end
