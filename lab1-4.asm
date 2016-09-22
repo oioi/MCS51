@@ -9,7 +9,7 @@ start:	mov 	r0, #0bh ; memory offset
 
 avrl:	movx	a, @r0
 
-	; Diving each element of sum as it's easier then diving big numbers
+	; Diving each element of sum as it's easier than diving big numbers
 	mov	b, #0ah
 	div	ab
 
@@ -54,6 +54,6 @@ tmin:	mov	r0, #01h
 	mov	a, r2
 	orl	a, #0feh
 
-quit:	mov	p0, a
+quit:	mov	p1, a
 	jmp	$
 end
