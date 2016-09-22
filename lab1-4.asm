@@ -7,7 +7,7 @@ start:	mov 	r0, #0bh ; memory offset
 	mov 	r1, #0h  ; average sum
 	mov	r2, #0h  ; remainder sum
 
-avrl1:	movx	a, @r0
+avrl:	movx	a, @r0
 
 	; Diving each element of sum as it's easier then diving big numbers
 	mov	b, #0ah
@@ -21,8 +21,8 @@ avrl1:	movx	a, @r0
 	add	a, b
 	mov 	r2, a
 
-avrl2:	dec	r0
-	cjne	r0, #01h, avrl1
+	dec	r0
+	cjne	r0, #01h, avrl
 
 	; Correcting our sum with final remainder
 	mov	a, r2
@@ -32,7 +32,7 @@ avrl2:	dec	r0
 	mov	r1, a
 
 	; R2 - will be used for output
-	mov r2, #0fch
+	mov 	r2, #0fch
 
 	; Checking if average is >= than Qmax
 	mov	r0, #0h
