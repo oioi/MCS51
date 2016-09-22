@@ -3,48 +3,57 @@ org 00h
 
 org 100h
 
-start:	mov 	dptr, #array
-	mov 	r0, #0bh
-	mov 	r1, #0h
+start:	mov 	r0, #0bh ; memory offset
+	mov 	r1, #0h  ; average sum
+	mov	r2, #0h  ; remainder sum
 
-; Calculating average of array
-avrl1:  mov 	a, r0
-	movc 	a, @a+dptr
+avrl1:	movx	a, @r0
+
+	; Diving each element of sum as it's easier then diving big numbers
+	mov	b, #0ah
+	div	ab
 
 	add	a, r1
 	mov	r1, a
 
-	dec 	r0
-	cjne 	r0, #01h, avrl1
+	; Accumulutaing remainders in r2
+	mov	a, r2
+	add	a, b
+	mov 	r2, a
 
-	mov	a, r1
+avrl2:	dec	r0
+	cjne	r0, #01h, avrl1
+
+	; Correcting our sum with final remainder
+	mov	a, r2
 	mov	b, #0ah
 	div	ab
-	mov	r1, a ; R1 contains average of array[2..11]
+	add	a, r1
+	mov	r1, a
 
-	clr	p0.0
-	clr	p0.1
+	; R2 - will be used for output
+	mov r2, #0fch
 
-; Checking if average is >= than Qmax
-	mov	a, #0h
-	movc	a, @a+dptr
+	; Checking if average is >= than Qmax
+	mov	r0, #0h
+	movx	a, @r0
 	subb	a, r1
 	jz	qmax
 	jnc	tmin
 
-qmax:	setb	p0.0
-	setb	p0.1;
+qmax:	mov	a, r2
+	orl	a, #0ffh
 	jmp	quit
 
-; Checking if average is > than Qmin
-tmin:	mov	a, #01h
-	movc	a, @a+dptr
-	subb	a, r1
-	jnc	quit
-	setb	p0.1
+	; Checking if average is > than Qmin
+tmin:	mov	r0, #01h
+	movx	a, @r0
+	subb 	a, r1
+	jnc 	quit
 
-quit:	jmp $
+	mov	a, r2
+	orl	a, #0feh
 
-org 800h
-	array: db 6,4,1,2,3,4,5,6,7,8,9,10 ; max, min, data array -> size 10
+quit:	mov	p0, a
+	jmp	$
 end
